@@ -1,0 +1,109 @@
+🛠️ Design & Algorithm Document
+Title: Real-Time World Clock Utility
+Author: Sanjeet (sanjeet8.23@gmail.com)
+Date: 18th May 2025
+
+📌 Purpose
+This modular C-based utility displays the current local time for multiple countries using UTC as a reference. 
+It applies time zone offsets, Daylight Saving Time (DST), and 12-hour formatting. The program refreshes every second,
+making it ideal for real-time monitoring and educational demonstrations of time zone logic.
+
+🎯 Goals
+- Display local time for a predefined list of countries.
+- Use UTC as the base reference for all calculations.
+- Apply hour and minute offsets, including DST adjustments.
+- Format time in 12-hour format with AM/PM and relative day indicators.
+- Maintain a modular, extensible design for future enhancements.
+
+🧱 Step 1: Problem Definition
+- Retrieve current UTC time from the system.
+- Convert UTC to each country’s local time using fixed offsets and DST.
+- Normalize time values (e.g., 75 minutes → 1 hour 15 minutes).
+- Adjust calendar date if time crosses day boundaries.
+- Display formatted output and refresh every second.
+
+🗃️ Step 2: Data Structures
+struct Country
+typedef struct {
+    char name[MAX_NAME];             // Country name
+    int utc_offset_hours;           // Hour-based UTC offset
+    int utc_offset_minutes;         // Minute-based UTC offset
+    int dst_active;                 // Daylight Saving Time flag (1 = active, 0 = inactive)
+} Country;
+
+
+- Stored in a global array Country countries[] for iteration.
+struct tm (from <time.h>)
+Represents system time in a structured format:
+struct tm {
+    int tm_sec;     // Seconds [0–60]
+    int tm_min;     // Minutes [0–59]
+    int tm_hour;    // Hours [0–23]
+    int tm_mday;    // Day of month [1–31]
+    int tm_mon;     // Months since January [0–11]
+    int tm_year;    // Years since 1900
+    int tm_wday;    // Days since Sunday [0–6]
+    int tm_yday;    // Days since Jan 1 [0–365]
+    int tm_isdst;   // DST flag
+};
+
+
+
+⚙️ Step 3: Core Algorithm Breakdown
+3.1 Get Current UTC Time
+- Use time() and gmtime() to retrieve current UTC time.
+- Store result in a struct tm*.
+3.2 Calculate Local Time
+For each country:
+- Add hour and minute offsets to UTC.
+- Add 1 hour if DST is active.
+- Normalize minutes (carry/borrow to hour).
+- Normalize hours (carry/borrow to day).
+- Convert to 12-hour format and assign AM/PM.
+3.3 Adjust Calendar Date
+- Apply day offset to UTC date.
+- Simplified logic assumes 30 days per month.
+- Handles transitions like:
+- 31st → 1st (next month)
+- 0th → 30th (previous month)
+3.4 Generate Formatted Output
+Print:
+CountryName: DayOfWeek, DD Month YYYY - HH:MM AM/PM (RelativeDay, DSTStatus)
+
+
+Example:
+India          : Saturday, 21 June 2025 - 06:51 PM (Today, Standard Time)
+
+
+3.5 Repeat Every Second
+- Use sleep(1) inside main() to refresh the display.
+
+🧩 Step 4: Modular Function Breakdown
+| Function Name | Purpose | 
+| getCurrentUTC() | Retrieves current UTC time using gmtime(). | 
+| normalizeMinutes() | Adjusts minutes and updates hour if overflow/underflow occurs. | 
+| normalizeHours() | Normalizes hour to [0–23] and sets day offset. | 
+| convertTo12Hour() | Converts 24-hour format to 12-hour and sets AM/PM. | 
+| computeLocalTime() | Calculates local hour, minute, period, and day offset from UTC. | 
+| formatLocalDate() | Adjusts day, month, and year based on day offset (simplified to 30-day). | 
+| displayFormattedTime() | Prints formatted local time string for a country. | 
+| processCountryTime() | Coordinates time computation, date formatting, and display. | 
+| displayWorldClock() | Iterates through all countries and prints their local time. | 
+| main() | Runs the infinite update loop with 1-second refresh interval. | 
+
+
+
+📌 Simplifying Assumptions
+- All months are treated as 30 days (for educational clarity).
+- DST is statically defined in the country array.
+- No leap year or real calendar logic (yet) — but easily extendable.
+
+✅ Sample Output
+World Clock:
+India          : Saturday, 21 June 2025 - 06:51 PM (Today, Standard Time)
+China          : Saturday, 21 June 2025 - 09:21 PM (Today, Standard Time)
+United Kingdom : Saturday, 21 June 2025 - 02:51 PM (Today, DST Active)
+
+
+
+

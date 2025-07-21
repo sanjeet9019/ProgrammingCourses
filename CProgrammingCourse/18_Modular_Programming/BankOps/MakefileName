@@ -1,0 +1,29 @@
+######################################
+# Author       : Sanjeet Prasad      #
+# Email        : sanjeet8.23@gmail.com #
+# Description  : Makefile for C Bank Project #
+# Date         : 28th June 2025              #
+######################################
+
+# Define variables
+CC      = gcc
+CFLAGS  = -Wall -g
+TARGET  = BankApp
+
+# Object files
+OBJ     = bank_main.o bank_module.o
+
+# Build target executable
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) -o $(TARGET)
+
+# Generic compilation rule for .c files depending on .h
+%.o : %.c %.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Clean rule
+.PHONY: clean
+clean:
+	rm -rf *.o *.gch $(TARGET)
+
+

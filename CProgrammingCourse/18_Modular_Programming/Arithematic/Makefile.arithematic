@@ -1,0 +1,42 @@
+##################################################
+# Author       : Sanjeet Prasad                  #
+# Email        : sanjeet8.23@gmail.com           #
+# Description  : Makefile for Arithmetic Project #
+#               Compiles arithmetic_main.c and   #
+#               all math operation modules       #
+# Date         : 26th June 2025                  #
+##################################################
+
+# Compiler and flags
+CC      = gcc
+CFLAGS  = -Wall -g
+TARGET  = ArithmeticApp
+
+# Object files
+OBJS    = arithmetic_main.o add.o sub.o mul.o div.o
+
+# Build executable
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(TARGET)
+
+# Compile main file
+arithmetic_main.o: arithmetic_main.c add.h sub.h mul.h div.h
+	$(CC) $(CFLAGS) -c arithmetic_main.c
+
+# Compile modules
+add.o: add.c add.h
+	$(CC) $(CFLAGS) -c add.c
+
+sub.o: sub.c sub.h
+	$(CC) $(CFLAGS) -c sub.c
+
+mul.o: mul.c mul.h
+	$(CC) $(CFLAGS) -c mul.c
+
+div.o: div.c div.h
+	$(CC) $(CFLAGS) -c div.c
+
+# Clean build artifacts
+.PHONY: clean
+clean:
+	rm -rf *.o *.gch $(TARGET)
