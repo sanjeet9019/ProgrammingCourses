@@ -1,26 +1,68 @@
 {
-    "version": "0.2.0",
-    "configurations": [
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug DataStructures Executable",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/16_DataStructures/datastructures.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/16_DataStructures",
+      "environment": [],
+      "externalConsole": true,
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:/mingw64/bin/gdb.exe",
+      "setupCommands": [
         {
-            "name": "Debug DataStructures Executable",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/16_DataStructures/datastructures.exe",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/16_DataStructures",
-            "environment": [],
-            "externalConsole": true,
-            "MIMode": "gdb",
-            "miDebuggerPath": "C:/mingw64/bin/gdb.exe",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
-            "preLaunchTask": "Build DataStructures Project"
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
         }
-    ]
+      ],
+      "preLaunchTask": "Build DataStructures Project"
+    },
+    {
+      "name": "Debug Unity Test Executable",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/Unity_Testing_Framework/math_unity.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/Unity_Testing_Framework",
+      "environment": [],
+      "externalConsole": true,
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:/mingw64/bin/gdb.exe",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+      "preLaunchTask": "Build: Unity Test Framework"
+    },
+    {
+      "name": "Demo Unity Test Executable",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/demo/CUnitExample/testunity.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/demo/CUnitExample",
+      "environment": [],
+      "externalConsole": true,
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:/mingw64/bin/gdb.exe",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+      "preLaunchTask": "build_testunity"
+    }
+  ]
 }
