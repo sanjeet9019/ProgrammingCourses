@@ -7,7 +7,7 @@
 #               specified usage threshold.
 # Author      : Sanjeet Prasad
 # Email       : sanjeet8.23@gmail.com
-# Date        : October 19, 2025
+# Date        : October 21, 2025
 ##################################################################
 
 TEST_MODE=false  # Enable with --test
@@ -25,11 +25,15 @@ send_email() {
     for email in "${emails[@]}"; do
         if $TEST_MODE; then
             echo "$subject"
+            echo
             echo "$body"
         fi
         mailx -s "$subject" "$email" <<EOF
 $body
 EOF
+        if [[ $? -ne 0 ]]; then
+            echo "Error: Failed to send email to $email"
+        fi
     done
 }
 
@@ -69,42 +73,36 @@ main() {
         show_usage
     fi
 
-	# Disk snapshot block (only in normal mode)
+    # Capture df output once
+    df_output=$(df -k -t ext4 -t ext2)
+
+    # Disk snapshot block (only in normal mode)
     if ! $TEST_MODE; then
         echo "----------------------------------------"
         echo "Current ext2/ext4 Disk Usage Snapshot:"
-        df -T -P | awk '
-        BEGIN { print "Filesystem\tType\tSize\tUsed\tAvail\tUse%\tMounted on" }
-        $2 ~ /^ext[24]$/ { print $0 }
+        echo "$df_output" | awk '
+        BEGIN { print "Filesystem     1K-blocks     Used Available Use% Mounted on" }
+        { print $0 }
         '
-        if ! df -T -P | awk '$2 ~ /^ext2$/' | grep -q .; then
+        if ! echo "$df_output" | awk '$2 ~ /^ext2$/' | grep -q .; then
             echo "Note: ext2 is not supported on this system."
         fi
         echo "----------------------------------------"
     fi
+
     # Process disk usage
-    df -T -P | awk -v cap="$capacity" '
-    $2 ~ /^ext[24]$/ {
-        usage = $(NF-1)
-        gsub(/%/, "", usage)
-        if (usage >= cap) {
-            fs = $NF
-            header = "Filesystem\tType\tSize\tUsed\tAvail\tUse%\tMounted on"
-            if (usage >= 90) {
-                subject = "Critical Warning: the file system " fs " is greater than or equal to 90% capacity"
-            } else {
-                subject = "Warning: the file system " fs " is above " cap " % used"
-            }
-            print subject "\n" header "\n" $0 > "/dev/stdout"
-        }
-    }' | while IFS= read -r line; do
-        if [[ "$line" =~ ^(Warning|Critical) ]]; then
-            subject="$line"
-            body=""
-        elif [[ "$line" =~ ^Filesystem ]]; then
-            body="$line"
-        else
-            body="$body"$'\n'"$line"
+    echo "$df_output" | tail -n +2 | while read -r line; do
+        usage=$(echo "$line" | awk '{print $(NF-1)}' | sed 's/%//')
+        mountpoint=$(echo "$line" | awk '{print $NF}')
+
+        if [[ "$usage" -ge "$capacity" ]]; then
+			if [[ "$usage" -ge 90 ]]; then
+				subject="Critical Warning: the file system $mountpoint is greater than or equal to 90% capacity"
+			else
+				subject="Warning: the file system $mountpoint is above $capacity % used"
+			fi
+            header="Filesystem     1K-blocks     Used Available Use% Mounted on"
+            body="$header"$'\n'"$line"
             send_email "$subject" "$body"
         fi
     done

@@ -44,11 +44,11 @@ run_test_case() {
 
     if [[ "$use_mock" == "true" ]]; then
         mkdir -p mock_bin
-        cat > mock_bin/df <<EOF
+		cat > mock_bin/df <<EOF
 #!/bin/bash
 cat <<DATA
 Filesystem     Type  1K-blocks    Used Available Use% Mounted on
-/dev/sda3      ext4  40453376  40000000   453376   99% /
+/dev/sda3      ext4  40453376  40453376        0 100% /
 DATA
 EOF
         chmod +x mock_bin/df
