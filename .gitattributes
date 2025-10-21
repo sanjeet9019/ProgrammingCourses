@@ -1,0 +1,6 @@
+# Set a default text treatment for most files
+* text=auto
+
+# Ensure all Shell Scripts and C code use LF endings in the repository
+*.sh text eol=lf
+*.c text eol=lf

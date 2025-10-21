@@ -9,11 +9,24 @@
 * Standard     : C99                                  *
 *                                                     *
 *******************************************************/
-
 #include <stdio.h>
 
-int main(int argc, char *argv[])
-{
-    printf("First C program");
+int main() {
+    FILE *fp = fopen("output.txt", "w");
+    if (!fp) {
+        perror("File open failed");
+        return 1;
+    }
+
+    fprintf(fp, "This is a buffered line.");
+    
+    // Comment out this line to observe delayed file write
+    fflush(fp);
+
+    printf("Done writing to file.\n");
+
+    getchar();  // Pause so you can inspect the file before fclose
+
+    fclose(fp);
     return 0;
 }

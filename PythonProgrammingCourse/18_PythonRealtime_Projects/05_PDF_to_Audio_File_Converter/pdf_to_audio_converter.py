@@ -20,13 +20,14 @@ class PDFToAudioConverter:
         self.audio_output = audio_output
         self.tts_engine = pyttsx3.init()
         self.pdf_reader = None
+        self.pdf_file = None  # Keep file reference open during processing
 
     def read_pdf(self):
         """Open and load PDF pages"""
         try:
-            with open(self.pdf_path, "rb") as file:
-                self.pdf_reader = PyPDF2.PdfReader(file)
-                print(f"📄 Loaded PDF: {self.pdf_path} with {len(self.pdf_reader.pages)} pages.")
+            self.pdf_file = open(self.pdf_path, "rb")  # Keep file open
+            self.pdf_reader = PyPDF2.PdfReader(self.pdf_file)
+            print(f"📄 Loaded PDF: {self.pdf_path} with {len(self.pdf_reader.pages)} pages.")
         except FileNotFoundError:
             print(f"❌ PDF file '{self.pdf_path}' not found.")
         except Exception as e:
@@ -65,6 +66,8 @@ class PDFToAudioConverter:
         print("\n🔧 Starting PDF to MP3 Conversion...\n")
         self.read_pdf()
         self.convert_to_audio()
+        if self.pdf_file:
+            self.pdf_file.close()
         print("\n🎧 Conversion Complete.\n")
 
 # -------------------- Program Entry Point --------------------

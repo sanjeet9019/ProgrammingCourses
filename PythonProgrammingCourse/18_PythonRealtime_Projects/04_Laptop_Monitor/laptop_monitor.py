@@ -14,6 +14,8 @@ import time
 from ping3 import ping
 import speedtest
 import platform
+import pathlib
+import threading
 
 class LaptopMonitor:
     """
@@ -21,7 +23,8 @@ class LaptopMonitor:
     """
 
     def __init__(self):
-        self.folder_path = r"C:\Users\sanprasa\Desktop\python\PyProject"
+        # Dynamically set folder path to one level up from script location
+        self.folder_path = str(pathlib.Path(__file__).resolve().parent.parent)
         self.ping_host = "google.com"
 
     def monitor_disk_space(self):
@@ -73,7 +76,10 @@ class LaptopMonitor:
         print("\n📶 Monitoring Network Latency\n")
         try:
             latency = ping(self.ping_host)
-            print(f"Ping to {self.ping_host}: {latency:.2f} ms")
+            if latency is not None:
+                print(f"Ping to {self.ping_host}: {latency:.2f} ms")
+            else:
+                print(f"⚠️ No response from {self.ping_host}")
         except Exception as e:
             print(f"⚠️ Ping failed: {e}")
 
@@ -86,56 +92,62 @@ class LaptopMonitor:
         print(f"CPU Usage : {usage}%")
 
     def monitor_processes(self):
-        """List user-level processes excluding system services"""
-        print("\n⚙️ Monitoring Processes\n")
-        excluded = {
-            "svchost.exe", "services.exe", "lsass.exe", "csrss.exe", "smss.exe",
-            "wininit.exe", "fontdrvhost.exe", "conhost.exe", "WUDFHost.exe",
-            "msedge.exe", "IntelCpHDCPSvc.exe"
-        }
+        """List important user-facing processes"""
+        print("\n⚙️ Monitoring Important Processes\n")
+        important_keywords = [
+            "chrome", "firefox", "edge", "notepad", "word", "excel", "powerpnt",
+            "python", "vscode", "teams", "zoom", "skype", "explorer", "cmd"
+        ]
+        seen = set()
         for proc in psutil.process_iter(['name']):
             try:
-                name = proc.info['name']
-                if name not in excluded:
-                    print(f"Process: {name}")
+                name = proc.info['name'].lower()
+                if any(keyword in name for keyword in important_keywords):
+                    if name not in seen:
+                        print(f"🔹 Process: {name}")
+                        seen.add(name)
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 continue
 
     def monitor_speed_test(self):
-        """Check internet upload and download speed"""
+        """Check internet upload and download speed with timeout protection"""
         print("\n⏱️ Monitoring Download & Upload Speed\n")
         print("Running speed test… please wait.\n")
-        try:
-            st = speedtest.Speedtest()
-            st.get_best_server()
-            down = st.download() / 1_000_000
-            up = st.upload() / 1_000_000
-            print(f"Download Speed : {down:.2f} Mbps")
-            print(f"Upload Speed   : {up:.2f} Mbps")
-        except Exception as e:
-            print(f"⚠️ Speed test failed: {e}")
+
+        def run_speedtest():
+            try:
+                st = speedtest.Speedtest()
+                st.get_best_server()
+                down = st.download() / 1_000_000
+                up = st.upload() / 1_000_000
+                print(f"Download Speed : {down:.2f} Mbps")
+                print(f"Upload Speed   : {up:.2f} Mbps")
+            except Exception as e:
+                print(f"⚠️ Speed test failed: {e}")
+
+        thread = threading.Thread(target=run_speedtest)
+        thread.daemon = True
+        thread.start()
+        thread.join(timeout=10)
+        if thread.is_alive():
+            print("⚠️ Speed test timed out. Skipping...")
 
     def run_all(self):
         """Execute all monitoring functions in loop"""
         print("\n🖥️ Laptop Monitoring Tool — Real-time Stats\n")
-        while True:
-            self.monitor_disk_space()
-            self.monitor_files()
-            self.monitor_network_usage()
-            self.monitor_network_latency()
-            self.monitor_speed_test()
-            self.monitor_cpu_usage()
-            self.monitor_processes()
-            self.monitor_active_interfaces()
-            try:
+        try:
+            while True:
+                self.monitor_disk_space()
+                self.monitor_files()
+                self.monitor_network_usage()
+                self.monitor_network_latency()
+                self.monitor_speed_test()
+                self.monitor_cpu_usage()
+                self.monitor_processes()
+                self.monitor_active_interfaces()
                 time.sleep(10)
-            except KeyboardInterrupt:
-                choice = input("\n🔁 Ctrl+C detected. Continue monitoring? (y/n): ").lower()
-                if choice == 'n':
-                    print("🚫 Monitoring stopped.")
-                    break
-                elif choice != 'y':
-                    print("⚠️ Invalid input. Type 'y' to continue or 'n' to exit.")
+        except KeyboardInterrupt:
+            print("\n🚫 Monitoring interrupted by user.")
 
 # ----------------------- Main Entry -----------------------
 def main():
