@@ -159,3 +159,5 @@ To explore the course materials locally:
 ## Contributions
 
 Feel free to open issues or pull requests if you have suggestions, corrections, or want to contribute new content.
+
+For **customized training** in Python Programming or other programming topics, please connect via email: **sanjeet8.23@gmail.com**
