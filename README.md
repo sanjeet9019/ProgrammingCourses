@@ -1,3 +1,7 @@
+![GitHub last commit](https://img.shields.io/github/last-commit/sanjeet9019/ProgrammingCourses)
+![GitHub repo size](https://img.shields.io/github/repo-size/sanjeet9019/ProgrammingCourses)
+![GitHub contributors](https://img.shields.io/github/contributors/sanjeet9019/ProgrammingCourses)
+![GitHub license](https://img.shields.io/github/license/sanjeet9019/ProgrammingCourses)
 # 🚀 ProgrammingCourses
 
 A modular, hands-on repository for mastering **Python programming**, **C systems development**, **Unix/Linux shell scripting**, and **Git version control**.  
