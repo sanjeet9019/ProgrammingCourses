@@ -1,5 +1,29 @@
+#.gitignore file tells Git which files or folders to exclude from version control. 
+#Git won’t track changes to those files, won’t commit them, and won’t push remote repositories.
+
+# Ignore Windows executables
 *.exe
+
+# Ignore compiled object files (C/C++)
 *.obj
+
+# Ignore log files generated during testing or runtime
 *.log
+*.tmp
+
+# Ignore Python bytecode cache directories
 __pycache__/
+
+# Ignore VSCode editor settings folder
 .vscode/
+
+# Ignore backup files created by some editors (e.g., script.sh~)
+*~
+
+# Optional: Ignore virtual environments (Python)
+# venv/
+# .env/
+
+# Optional: Ignore build artifacts
+# build/
+# dist/
