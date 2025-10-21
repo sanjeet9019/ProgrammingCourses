@@ -1,6 +1,25 @@
-# Set a default text treatment for most files
+# .gitattributes — Control Git’s File Handling Behavior
+
+# Set default text treatment for all files
 * text=auto
 
-# Ensure all Shell Scripts and C code use LF endings in the repository
+# Ensure shell scripts use LF (Unix-style) line endings
 *.sh text eol=lf
+
+# Ensure C source files use LF line endings
 *.c text eol=lf
+
+# Normalize line endings for headers and C++ files
+*.h text eol=lf
+*.cpp text eol=lf
+
+# Normalize line endings for Python scripts
+*.py text eol=lf
+
+# Improve GitHub language detection for Python
+*.py linguist-language=Python
+
+# Optional: Treat binary files as non-diffable
+# *.bin binary
+# *.elf binary
+# *.exe binary
