@@ -7,11 +7,11 @@ Welcome to the C Programming Course repository! This comprehensive course is des
 The course is structured into the following modules and topics:
 
 ### 01_Intro_Fundamentals/
-* `first_program.c.c` - Your very first C program.
+* `first_program.c` - Your very first C program.
 * `first_program.i` - Preprocessed output of the first program.
 * `first_program.o` - Object file of the first program.
 * `first_program.s` - Assembly code of the first program.
-* `second_program.c.c` - Another basic C program.
+* `second_program.c` - Another basic C program.
 
 ### 02_DataTypes_Variables/
 * `Cmodifiers.h` - Header for C modifiers.
@@ -204,6 +204,8 @@ To explore the C programming course materials locally:
     ```
 3.  Compile and run the `.c` files using a C compiler (like GCC).
 
-## Contributions
+## Contributions & Custom Training
 
-Feel free to open issues or pull requests if you have suggestions, corrections, or want to contribute new content to this C programming course.
+We welcome issues or pull requests if you have suggestions, corrections, or want to contribute new content.
+
+For customized training in C programming, please connect via email: sanjeet8.23@gmail.com
